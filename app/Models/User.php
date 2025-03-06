@@ -31,9 +31,21 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
+        'id',
         'password',
         'remember_token',
     ];
+    /**
+     * Summary of getHashedIdAttribute
+     * @return string
+     */
+    public function getHashedIdAttribute()
+    {
+        return base64_encode($this->id); // Simple obfuscation
+    }
+
+    // Ensure `hashed_id` is included in the response
+    protected $appends = ['hashed_id'];
 
     /**
      * Get the attributes that should be cast.
