@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -58,5 +60,19 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    /**
+     * Summary of projects
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Project, User>
+     */
+    public function projects(): BelongsToMany {
+        return $this->belongsToMany(Project::class);
+    }
+    /**
+     * Summary of timesheets
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Timesheet, User>
+     */
+    public function timesheets(): HasMany {
+        return $this->hasMany(Timesheet::class);
     }
 }
