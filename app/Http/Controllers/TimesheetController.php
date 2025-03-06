@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 class TimesheetController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Summary of index
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
@@ -23,15 +24,9 @@ class TimesheetController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Summary of store
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -53,34 +48,43 @@ class TimesheetController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Timesheet $timesheet)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Timesheet $timesheet)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Summary of update
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Timesheet $timesheet
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, Timesheet $timesheet)
     {
-        //
+        try{
+            $validated = $request->validate([
+                'task_name' => 'sometimes|string|max:255',
+                'date' => 'sometimes|date',
+                'hours' => 'sometimes|numeric|min:0',
+                'user_id' => 'sometimes|exists:users,id',
+                'project_id' => 'sometimes|exists:projects,id'
+            ]);
+
+            $timesheet->update($validated);
+            return $this->successResponse($timesheet, 'Timesheet updated successfully', 200);
+
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Summary of destroy
+     * @param \App\Models\Timesheet $timesheet
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Timesheet $timesheet)
     {
-        //
+        try {
+            $timesheet->delete();
+            return $this->successResponse(null, 'Timesheet deleted successfully', 204);
+
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
     }
 }

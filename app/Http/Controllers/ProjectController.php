@@ -15,38 +15,48 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        //
-        $query = Project::with('attributes.attribute');
-        if ($filters = $request->input('filters')) {
-            foreach ($filters as $key => $value) {
-                if (in_array($key, ['name', 'status'])) {
-                    $query->where($key, 'LIKE', "%$value%");
-                } else {
-                    $attribute = Attribute::where('name', $key)->first();
-                    if ($attribute) {
-                        $query->whereHas('attributes', function ($q) use ($attribute, $value) {
-                            $q->where('attribute_id', $attribute->id)
-                                ->where('value', 'LIKE', "%{$value}%");
-                        });
+        try {
+            $query = Project::with('attributes.attribute');
+            if ($filters = $request->input('filters')) {
+                foreach ($filters as $key => $value) {
+                    if (in_array($key, ['name', 'status'])) {
+                        $query->where($key, 'LIKE', "%$value%");
+                    } else {
+                        $attribute = Attribute::where('name', $key)->first();
+                        if ($attribute) {
+                            $query->whereHas('attributes', function ($q) use ($attribute, $value) {
+                                $q->where('attribute_id', $attribute->id)
+                                    ->where('value', 'LIKE', "%{$value}%");
+                            });
+                        }
                     }
                 }
             }
+
+            $reponse =  $query->paginate(10);
+            return $this->successResponse($reponse, 'Projects retrieved successfully');
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
         }
-
-        // $reponse =  $query->with('attributes.attribute')->get();
-        $reponse =  $query->get();
-
-
-        return $this->successResponse($reponse, 'Projects retrieved successfully');
     }
-
     /**
-     * Show the form for creating a new resource.
+     * Summary of show
+     * @param \App\Models\Project $project
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create() {}
-
+    public function show(Project $project)
+    {
+        try {
+            $project->with('attributes.attribute');
+            return $this->successResponse($project, 'Project retrieved successfully');
+        } catch (Exception $e) {
+            return $this->errorResponse('Something went wrong', 500);
+        }
+    }
     /**
-     * Store a newly created resource in storage.
+     * Summary of store
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -75,23 +85,10 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Project $project)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Project $project)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Summary of update
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Project $project
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, Project $project)
     {
@@ -127,7 +124,9 @@ class ProjectController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Summary of destroy
+     * @param \App\Models\Project $project
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Project $project)
     {

@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
 {
 
-
     use HasFactory,AuditorTrait;
     /**
      * Summary of fillable
