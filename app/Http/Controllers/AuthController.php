@@ -65,7 +65,8 @@ class AuthController extends Controller
                 return $this->failedResponse('Invalid credentials', [], 401);
             }
 
-            $user = Auth::user();
+            $userId = Auth::user()->id;
+            $user = User::find($userId);
             $token = $user->createToken('AuthToken')->accessToken;
 
             return $this->successResponse(['user' => $user, 'token' => $token], 'User logged in successfully', 200);
@@ -87,7 +88,9 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            $request->user()->token()->revoke();
+            $accessToken = Auth::user()->token();
+            $token= $request->user()->tokens->find($accessToken);
+            $token->revoke();
 
             return $this->successResponse([], 'Logged out successfully', 200);
 

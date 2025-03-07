@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Timesheet;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class TimesheetController extends Controller
 {
@@ -14,10 +15,22 @@ class TimesheetController extends Controller
      */
     public function index()
     {
-        try{
+        try {
             $timesheets = Timesheet::all();
             return $this->successResponse($timesheets, 'Timesheets retrieved successfully', 200);
-
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+    /**
+     * Summary of show
+     * @param \App\Models\Timesheet $timesheet
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(Timesheet $timesheet)
+    {
+        try {
+            return $this->successResponse($timesheet, 'Timesheet retrieved successfully', 200);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
@@ -41,7 +54,8 @@ class TimesheetController extends Controller
 
             $timesheet = Timesheet::create($validated);
             return $this->successResponse($timesheet, 'Timesheet created successfully', 201);
-
+        } catch (ValidationException $e) {
+            return $this->failedResponse('Validation failed', $e->errors(), 422);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
@@ -55,7 +69,7 @@ class TimesheetController extends Controller
      */
     public function update(Request $request, Timesheet $timesheet)
     {
-        try{
+        try {
             $validated = $request->validate([
                 'task_name' => 'sometimes|string|max:255',
                 'date' => 'sometimes|date',
@@ -66,7 +80,8 @@ class TimesheetController extends Controller
 
             $timesheet->update($validated);
             return $this->successResponse($timesheet, 'Timesheet updated successfully', 200);
-
+        } catch (ValidationException $e) {
+            return $this->failedResponse('Validation failed', $e->errors(), 422);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
@@ -81,8 +96,7 @@ class TimesheetController extends Controller
     {
         try {
             $timesheet->delete();
-            return $this->successResponse(null, 'Timesheet deleted successfully', 204);
-
+            return $this->successResponse(null, 'Timesheet deleted successfully');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
