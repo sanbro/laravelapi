@@ -22,7 +22,7 @@
 - **List Projects**: `GET /api/projects`
 - **Create Project**: `POST /api/projects`
 - **Get Project**: `GET /api/projects/{id}`
-- **Update Project**: `PUT /api/projects/{id}`
+- **Update Project**: `POST /api/projects/{id}`
 - **Delete Project**: `DELETE /api/projects/{id}`
 
 ### Timesheets
@@ -30,7 +30,7 @@
 - **List Timesheets**: `GET /api/timesheets`
 - **Create Timesheet**: `POST /api/timesheets`
 - **Get Timesheet**: `GET /api/timesheets/{id}`
-- **Update Timesheet**: `PUT /api/timesheets/{id}`
+- **Update Timesheet**: `POST /api/timesheets/{id}`
 - **Delete Timesheet**: `DELETE /api/timesheets/{id}`
 
 ### Attributes
@@ -38,45 +38,17 @@
 - **List Attributes**: `GET /api/attributes`
 - **Create Attribute**: `POST /api/attributes`
 - **Get Attribute**: `GET /api/attributes/{id}`
-- **Update Attribute**: `PUT /api/attributes/{id}`
+- **Update Attribute**: `POST /api/attributes/{id}`
 - **Delete Attribute**: `DELETE /api/attributes/{id}`
 
-### Attribute Values
+## API Documentation of POSTMAN
+## 🔥 Postman Collection
+Use the Postman collection to test the API:
 
-- **List Attribute Values**: `GET /api/attribute-values`
-- **Create Attribute Value**: `POST /api/attribute-values`
-- **Get Attribute Value**: `GET /api/attribute-values/{id}`
-- **Update Attribute Value**: `PUT /api/attribute-values/{id}`
-- **Delete Attribute Value**: `DELETE /api/attribute-values/{id}`
+- **Download Collection:** [postman_collection.json](API Astudio.postman_collection.json)
+- **Online Collection:** [View in Postman](https://documenter.getpostman.com/view/14976123/2sAYdmnTzY)
 
-## Example Requests/Responses
-
-### Register
-
-**Request:**
-
-```json
-{
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "john.doe@example.com",
-    "password": "password"
-}
-```
-**Response:**
-```json
-{
-    "status": true,
-    "message": "User registered successfully",
-    "data": {
-        "user": {
-            "first_name": "John",
-            "last_name": "Doe",
-            "email": "john.doe@example.com",
-            "updated_at": "2025-03-06T20:02:42.000000Z",
-            "created_at": "2025-03-06T20:02:42.000000Z",
-            "hashed_id": "MTI="
-        }
-    }
-}
-```
+### 📌 How to Import Postman Collection
+1. Open **Postman**.
+2. Click **Import** > Select **API Astudio.postman_collection.json**.
+3. Start testing the API.
